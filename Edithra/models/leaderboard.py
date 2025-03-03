@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from ..database import Base
+from Edithra.database.db_setup import Base
 
 class Leaderboard(Base):
     __tablename__ = "leaderboard"
