@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameSync AI Analytics</title>
+    <script>
+        async function fetchReport() {
+            try {
+                let response = await fetch("http://localhost:8000/api/game-report", {
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+
+                let data = await response.json();
+                document.getElementById("report").innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById("report").innerText = "Failed to fetch report: " + error.message;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>GameSync AI Analytics Dashboard</h2>
+    <button onclick="fetchReport()">Generate Report</button>
+    <pre id="report" style="white-space: pre-wrap; background: #f4f4f4; padding: 10px; border-radius: 5px;"></pre>
+</body>
+</html>
+
+

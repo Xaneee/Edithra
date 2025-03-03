@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GameSync AI Analytics</title>
+    <script>
+        async function fetchReport() {
+            let response = await fetch("/api/game-report");
+            let data = await response.json();
+            document.getElementById("report").innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h2>GameSync AI Analytics Dashboard</h2>
+    <button onclick="fetchReport()">Generate Report</button>
+    <pre id="report"></pre>
+</body>
+</html>
+
+
+
+

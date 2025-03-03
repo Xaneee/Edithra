@@ -1,0 +1,522 @@
+===== ./setupFrontend.js =====
+const fs = require('fs');
+const path = require('path');
+
+const baseDir = path.join(__dirname, 'gamesync-frontend');
+
+const files = {
+    "src/pages/index.js": "export default function Home() { return <h1>Welcome to GameSync AI</h1>; }",
+    "src/pages/login.js": "export default function Login() { return <h1>Login Page</h1>; }",
+    "src/pages/dashboard.js": "export default function Dashboard() { return <h1>Dashboard</h1>; }",
+    "src/components/Profile.js": "export default function Profile({ user }) { return <div>User: {user?.name}</div>; }",
+    "src/utils/api.js": "// API integration logic will go here",
+    "src/utils/auth.js": "// Authentication helper functions"
+};
+
+// Create directories
+Object.keys(files).forEach(filePath => {
+    const fullPath = path.join(baseDir, filePath);
+    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+    fs.writeFileSync(fullPath, files[filePath]);
+});
+
+console.log("✅ GameSync AI Frontend Structure Created!");
+===== ./next.config.js =====
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    reactStrictMode: true,
+    experimental: {
+      appDir: true
+    }
+  };
+  
+  export default nextConfig;
+  ===== ./app/styles/global.css =====
+===== ./package.json =====
+{
+    "name": "gamesync-frontend",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "setup": "node setupFrontend.js"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@mui/icons-material": "^5.15.1",
+        "@mui/material": "^5.15.1",
+        "@mui/system": "^5.15.1",
+        "axios": "^1.6.2",
+        "next": "15.2.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "typescript": "^5.1.6",
+        "zustand": "^4.3.9"
+    },
+    "devDependencies": {
+        "@types/node": "^20.4.8",
+        "@types/react": "^18.2.21",
+        "@types/react-dom": "^18.2.7",
+        "eslint": "^8.52.0",
+        "eslint-config-next": "^15.2.0"
+    }
+}
+===== ./src/components/CloudGPU.js =====
+export default function CloudGPU() {
+    return <div className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg'>Cloud GPU Status: Active</div>;
+}
+===== ./src/components/Leaderboard.js =====
+export default function Leaderboard() { return <h1>Leaderboard</h1>; }===== ./src/components/Profile.js =====
+export default function Profile({ user }) {
+    if (!user) return <p>Loading user...</p>;
+    return (
+        <div className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg'>
+            <h2 className='text-xl font-bold'>User Profile</h2>
+            <p>Name: {user.name}</p>
+            <p>Email: {user.email}</p>
+        </div>
+    );
+}
+===== ./src/components/Notifications.js =====
+export default function Notifications() { return <h1>Notifications</h1>; }===== ./src/components/AuthProvider.js =====
+import { createContext, useContext, useState } from 'react';
+
+const AuthContext = createContext(null);
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+
+    return (
+        <AuthContext.Provider value={{ user, setUser }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuthContext = () => useContext(AuthContext);
+===== ./src/components/UserStats.js =====
+export default function UserStats({ stats }) {
+    return (
+        <div className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg mt-4'>
+            <h2 className='text-xl font-bold'>User Stats</h2>
+            {stats ? (
+                <ul>
+                    <li>Games Played: {stats.gamesPlayed}</li>
+                    <li>Win Rate: {stats.winRate}%</li>
+                    <li>Rank: {stats.rank}</li>
+                </ul>
+            ) : (
+                <p>Loading stats...</p>
+            )}
+        </div>
+    );
+}
+===== ./src/components/HighlightsList.js =====
+export default function HighlightsList({ highlights }) {
+    return (
+        <div className='mt-4'>
+            {highlights.length > 0 ? (
+                highlights.map((highlight, index) => (
+                    <div key={index} className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg mt-2'>
+                        <h2 className='text-lg font-bold'>{highlight.title}</h2>
+                        <video src={highlight.videoUrl} controls className='w-full mt-2'></video>
+                    </div>
+                ))
+            ) : (
+                <p>No highlights available</p>
+            )}
+        </div>
+    );
+}
+===== ./src/components/LiveNotifications.js =====
+import { useState, useEffect } from 'react';
+
+export default function LiveNotifications() {
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:5000');
+
+        ws.onmessage = (event) => {
+            setNotifications((prev) => [...prev, event.data]);
+        };
+
+        return () => ws.close();
+    }, []);
+
+    return (
+        <div className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg mt-4'>
+            <h2 className='text-xl font-bold'>Live Notifications</h2>
+            {notifications.length > 0 ? (
+                notifications.map((note, index) => (
+                    <p key={index}>{note}</p>
+                ))
+            ) : (
+                <p>No live updates yet</p>
+            )}
+        </div>
+    );
+}
+===== ./src/pages/video-processing.js =====
+import { useState } from 'react';
+import { uploadVideo } from '@/utils/cloudStorage';
+
+export default function VideoProcessing() {
+    const [file, setFile] = useState(null);
+
+    const handleUpload = async () => {
+        if (file) {
+            const response = await uploadVideo(file);
+            alert(response.message);
+        }
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Video Upload</h1>
+            <input type='file' onChange={(e) => setFile(e.target.files[0])} />
+            <button onClick={handleUpload} className='bg-gradient-to-r from-blue-500 to-green-500 hover:scale-105 transition transform duration-300 px-4 py-2 mt-4'>Upload</button>
+        </div>
+    );
+}
+===== ./src/pages/login.js =====
+import { signInWithGoogle } from '@/utils/auth';
+
+export default function Login() {
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 flex flex-col justify-center items-center'>
+            <h1 className='text-2xl font-bold'>Login</h1>
+            <button onClick={signInWithGoogle} className='bg-gradient-to-r from-green-500 to-teal-500 hover:scale-105 transition transform duration-300 text-gray-100 px-4 py-2 mt-4'>Sign in with Google</button>
+        </div>
+    );
+}
+===== ./src/pages/cloud-gpu.js =====
+import { useState, useEffect } from 'react';
+import { getCloudGPUStatus } from '@/utils/cloudGPU';
+
+export default function CloudGPU() {
+    const [status, setStatus] = useState(null);
+
+    useEffect(() => {
+        fetchStatus();
+    }, []);
+
+    const fetchStatus = async () => {
+        const gpuStatus = await getCloudGPUStatus();
+        setStatus(gpuStatus);
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Cloud GPU Status</h1>
+            {status ? <p className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg'>{status}</p> : <p>Checking GPU status...</p>}
+        </div>
+    );
+}
+===== ./src/pages/index.js =====
+export default function Home() {
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-3xl font-bold'>Welcome to GameSync AI</h1>
+            <a href='/dashboard'><button className='bg-gradient-to-r from-blue-500 to-green-500 hover:scale-105 transition transform duration-300 text-gray-100 px-4 py-2 mt-4'>Go to Dashboard</button></a>
+        </div>
+    );
+}
+===== ./src/pages/matchmaking.js =====
+import { useState } from 'react';
+
+export default function Matchmaking() {
+    const [match, setMatch] = useState(null);
+
+    const findMatch = async () => {
+        setMatch('You have been matched with PlayerX!');
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Matchmaking</h1>
+            <button onClick={findMatch} className='bg-gradient-to-r from-blue-500 to-green-500 hover:scale-105 transition transform duration-300 px-4 py-2 mt-4'>Find Match</button>
+            {match && <p className='mt-4'>{match}</p>}
+        </div>
+    );
+}
+import { useState } from 'react';
+import { findMatch } from '@/utils/matchmaking';
+
+export default function Matchmaking() {
+    const [match, setMatch] = useState(null);
+
+    const handleFindMatch = async () => {
+        const matchedPlayer = await findMatch();
+        setMatch(matchedPlayer);
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Matchmaking</h1>
+            <button onClick={handleFindMatch} className='bg-gradient-to-r from-blue-500 to-green-500 hover:scale-105 transition transform duration-300 px-4 py-2 mt-4'>Find Match</button>
+            {match && <p className='mt-4'>Matched with: {match.name}</p>}
+        </div>
+    );
+}
+===== ./src/pages/marketplace.js =====
+import { useState, useEffect } from 'react';
+import { getMarketplaceItems } from '@/utils/payments';
+
+export default function Marketplace() {
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        await fetchItems();
+    }, []);
+
+    const fetchItems = async () => {
+        const data = await getMarketplaceItems();
+        setItems(data);
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Marketplace</h1>
+            {items.map((item) => (
+                <div key={item.id} className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg mt-2'>
+                    <h2>{item.name} - ${item.price}</h2>
+                    <button className='bg-gradient-to-r from-green-500 to-teal-500 hover:scale-105 transition transform duration-300 px-4 py-2 mt-2'>Buy</button>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+
+import { useState, useEffect } from 'react';
+import { getMarketplaceItems, purchaseItem } from '@/utils/payments';
+
+export default function Marketplace() {
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        await fetchItems();
+    }, []);
+
+    const fetchItems = async () => {
+        const data = await getMarketplaceItems();
+        setItems(data);
+    };
+
+    const handlePurchase = async (itemId) => {
+        await purchaseItem(itemId);
+        alert('Purchase successful!');
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Marketplace</h1>
+            {items.map((item) => (
+                <div key={item.id} className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg mt-2'>
+                    <h2>{item.name} - ${item.price}</h2>
+                    <button onClick={() => handlePurchase(item.id)} className='bg-gradient-to-r from-green-500 to-teal-500 hover:scale-105 transition transform duration-300 px-4 py-2 mt-2'>Buy</button>
+                </div>
+            ))}
+        </div>
+    );
+}===== ./src/pages/leaderboard.js =====
+import { useState, useEffect } from 'react';
+import { getLeaderboard } from '@/utils/leaderboard';
+
+export default function Leaderboard() {
+    const [players, setPlayers] = useState([]);
+
+    useEffect(() => {
+        fetchLeaderboard();
+    }, []);
+
+    const fetchLeaderboard = async () => {
+        const data = await getLeaderboard();
+        setPlayers(data);
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Leaderboard</h1>
+            <ul>
+                {players.map((player, index) => (
+                    <li key={index} className='mt-2'>{index + 1}. {player.name} - {player.rank}</li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+===== ./src/pages/developer-api.js =====
+import { useState, useEffect } from 'react';
+import { getDeveloperAPI } from '@/utils/devAPI';
+
+export default function DeveloperAPI() {
+    const [apiData, setApiData] = useState(null);
+
+    useEffect(() => {
+        fetchAPIInfo();
+    }, []);
+
+    const fetchAPIInfo = async () => {
+        const data = await getDeveloperAPI();
+        setApiData(data);
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Developer API</h1>
+            {apiData ? <pre className='bg-gradient-to-r from-blue-800 to-gray-800 p-4 rounded-lg'>{JSON.stringify(apiData, null, 2)}</pre> : <p>Loading API details...</p>}
+        </div>
+    );
+}
+===== ./src/pages/dashboard.js =====
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { signOut } from '@/utils/auth';
+import { getUserStats } from '@/utils/api';
+import Profile from '@/components/Profile';
+import UserStats from '@/components/UserStats';
+import { useAuthContext } from '@/components/AuthProvider';
+
+export default function Dashboard() {
+    const { user } = useAuthContext();
+    const router = useRouter();
+    const [stats, setStats] = useState(null);
+
+    useEffect(() => {
+        if (!user) {
+            router.push('/login');
+            return;
+        }
+        fetchStats();
+    }, [user]);
+
+    const fetchStats = async () => {
+        if (user?.email) {
+            const userStats = await getUserStats(user.email);
+            setStats(userStats);
+        }
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>GameSync AI Dashboard</h1>
+            {user && <Profile user={user} />}
+            <UserStats stats={stats} />
+            <button onClick={signOut} className='bg-gradient-to-r from-red-500 to-orange-500 hover:scale-105 transition transform duration-300 px-4 py-2 mt-4'>Logout</button>
+        </div>
+    );
+}
+===== ./src/pages/live-updates.js =====
+import LiveNotifications from '@/components/LiveNotifications';
+
+export default function LiveUpdates() {
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>Live Game Updates</h1>
+            <LiveNotifications />
+        </div>
+    );
+}
+===== ./src/pages/highlights.js =====
+import { useState, useEffect } from 'react';
+import { getAIHighlights } from '@/utils/api';
+import HighlightsList from '@/components/HighlightsList';
+
+export default function Highlights() {
+    const [highlights, setHighlights] = useState([]);
+
+    useEffect(() => {
+        fetchHighlights();
+    }, []);
+
+    const fetchHighlights = async () => {
+        const data = await getAIHighlights();
+        setHighlights(data);
+    };
+
+    return (
+        <div className='min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-gray-100 p-6'>
+            <h1 className='text-2xl font-bold'>AI Highlights</h1>
+            <HighlightsList highlights={highlights} />
+        </div>
+    );
+}
+===== ./src/utils/devAPI.js =====
+export const getDeveloperAPI = async () => {
+    return { endpoint: 'https://api.gamesync.dev', key: 'YOUR_API_KEY' };
+};
+===== ./src/utils/cloudStorage.js =====
+export const uploadVideo = async (file) => {
+    return { message: 'Video uploaded successfully!' };
+};
+===== ./src/utils/api.js =====
+export const getUserStats = async (email) => {
+    if (!email) return null;
+    return {
+        gamesPlayed: 120,
+        winRate: 58,
+        rank: 'Diamond'
+    };
+};
+
+
+export const getAIHighlights = async () => {
+    return [
+        { title: 'Epic Clutch', videoUrl: '/videos/highlight1.mp4' },
+        { title: 'Insane Headshot', videoUrl: '/videos/highlight2.mp4' }
+    ];
+};
+===== ./src/utils/matchmaking.js =====
+export const findMatch = async () => {
+    return { name: 'PlayerX' };
+};
+===== ./src/utils/auth.js =====
+export const signInWithGoogle = async () => {
+    console.log('Signing in with Google...');
+};
+
+export const signOut = async () => {
+    console.log('Signing out...');
+};
+
+export const useAuth = () => {
+    return { user: { name: 'Test User', email: 'test@example.com' } };
+};
+===== ./src/utils/leaderboard.js =====
+export const getLeaderboard = async () => {
+    return [
+        { name: 'Gamer1', rank: 'Gold' },
+        { name: 'ProPlayer', rank: 'Platinum' },
+        { name: 'NoobSlayer', rank: 'Diamond' }
+    ];
+};
+===== ./src/utils/payment.js =====
+export const getMarketplaceItems = async () => {
+    return [
+        { id: 1, name: 'Game Skin', price: 5.99 },
+        { id: 2, name: 'Weapon Upgrade', price: 9.99 }
+    ];
+};
+
+export const purchaseItem = async (itemId) => {
+    console.log('Purchasing item ID:', itemId);
+    return { message: 'Purchase successful!' };
+};
+===== ./src/utils/websockets.js =====
+export const connectWebSocket = () => {
+    const ws = new WebSocket('ws://localhost:5000');
+    return ws;
+};
+===== ./src/utils/cloudGPU.js =====
+export const getCloudGPUStatus = async () => {
+    return 'Cloud GPU is running optimally';
+};
+===== ./tailwind.config.js =====
+module.exports = { content: ['./src/**/*.{js,ts,jsx,tsx}'], theme: { extend: {} }, plugins: [], };
+

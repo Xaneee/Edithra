@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Edithra/backend/Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"  # ✅ FastAPI backend API
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - FIREBASE_CREDENTIALS_PATH=${FIREBASE_CREDENTIALS_PATH}
+      - FIREBASE_BUCKET=${FIREBASE_BUCKET}
+    volumes:
+      - .:/app
+    networks:
+      - gamesync_network
+
+  redis:
+    image: "redis:alpine"
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"  # ✅ Redis caching service
+    networks:
+      - gamesync_network
+
+  postgres:
+    image: "postgres:latest"
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gamesync
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gamesync_network
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"  # ✅ HTTP for frontend & API requests
+      - "443:443"  # ✅ HTTPS for secure access
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./Edithra/frontend:/usr/share/nginx/html
+    depends_on:
+      - app
+    networks:
+      - gamesync_network
+
+volumes:
+  postgres_data:
+
+networks:
+  gamesync_network:
+    driver: bridge
+
+

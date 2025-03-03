@@ -1,0 +1,46 @@
+# FastAPI & ASGI Server
+fastapi
+uvicorn[standard]  # Includes required extras
+
+# AI Processing
+openai
+deepgram-sdk
+ultralytics
+transformers
+torch  # Required for many AI models
+
+# Database & ORM
+sqlalchemy
+psycopg2-binary  # Use psycopg2-binary instead of psycopg2 for better compatibility
+firebase-admin
+
+# Cloud Storage & APIs
+boto3
+supabase
+requests
+python-dotenv
+
+# Authentication & Security
+passlib[bcrypt]
+pyjwt
+twilio
+
+# Media Processing
+moviepy
+opencv-python-headless  # Use headless version to avoid GUI issues inside Docker
+speechrecognition
+pyttsx3
+pydub  # Required for audio processing
+
+# WebSockets & Event Streaming
+websockets
+asyncio
+
+# Utility Libraries
+pydantic
+pynacl  # Required for some encryption and authentication processes
+
+python-multipart
+redis
+
+

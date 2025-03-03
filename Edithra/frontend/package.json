@@ -1,0 +1,34 @@
+{
+    "name": "gamesync-frontend",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "setup": "node setupFrontend.js"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@mui/icons-material": "^5.15.1",
+        "@mui/material": "^5.15.1",
+        "@mui/system": "^5.15.1",
+        "axios": "^1.6.2",
+        "next": "15.2.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "typescript": "^5.1.6",
+        "zustand": "^4.3.9"
+    },
+    "devDependencies": {
+        "@types/node": "^20.4.8",
+        "@types/react": "^18.2.21",
+        "@types/react-dom": "^18.2.7",
+        "eslint": "^8.52.0",
+        "eslint-config-next": "^15.2.0"
+    }
+}
+
+
