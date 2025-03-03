@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..database import SessionLocal
-from ..models.leaderboard import Leaderboard
+from Edithra.database.db_setup import SessionLocal
+from Edithra.models.leaderboard import Leaderboard
 
 router = APIRouter(prefix="/leaderboard", tags=["leaderboard"])
 
