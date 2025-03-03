@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer
-from ..database import Base
+from Edithra.database.db_setup import Base
 
 class Marketplace(Base):
     __tablename__ = "marketplace"
