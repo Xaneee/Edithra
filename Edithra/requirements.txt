@@ -1,0 +1,41 @@
+# Web Framework
+fastapi==0.110.0
+uvicorn==0.29.0
+
+# Database (PostgreSQL)
+sqlalchemy==2.0.27
+psycopg2-binary==2.9.9
+
+# Redis Cache
+redis==5.0.1
+
+# Environment Variables Handling
+python-dotenv==1.0.1
+
+# AI & API Integrations
+openai==1.9.0
+deepgram-sdk==1.5.0
+google-api-python-client==2.114.0  # YouTube API
+
+# Authentication (OTP, JWT)
+twilio==8.0.1
+pyjwt==2.8.0
+passlib[bcrypt]==1.7.4
+
+# Stripe for Payments
+stripe==9.6.0
+
+# File Upload & Storage (Optional for Cloudflare/Supabase)
+boto3==1.34.45  # AWS S3 / Cloudflare R2
+supabase==1.0.3  # Supabase Storage SDK
+
+# Logging & Monitoring
+loguru==0.7.2
+
+# Background Tasks & Workers
+celery==5.3.6
+
+# Miscellaneous Utilities
+httpx==0.27.0
+requests==2.31.0
+asyncio==3.4.3
