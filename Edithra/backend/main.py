@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from backend.api.ai_recommendations import router as ai_recommendations_router
-from backend.api.matchmaking import router as matchmaking_router
-from backend.api.video_manager import router as video_router
-from backend.api.auth import router as auth_router
+from Edithra.backend.api.ai_recommendations import router as ai_recommendations_router
+from Edithra.backend.api.matchmaking import router as matchmaking_router
+from Edithra.backend.api.video_manager import router as video_router
+from Edithra.backend.api.auth import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
