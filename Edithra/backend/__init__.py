@@ -1,8 +1,2 @@
-touch backend/__init__.py
-git add backend/__init__.py
-git commit -m "Added __init__.py to fix module import"
-git push origin main
-
-
-
-
+# This file makes 'backend' a Python package.
+# It ensures Python treats this directory as a package.
