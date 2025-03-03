@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..database import SessionLocal
+from Edithra.database.db_setup import SessionLocal
 from ..models.friends import Friends
-from ..database import Base
+from Edithra.database import Base
 
 router = APIRouter(prefix="/friends", tags=["friends"])
 
