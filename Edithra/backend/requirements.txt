@@ -1,46 +1,41 @@
-# FastAPI & ASGI Server
-fastapi
-uvicorn[standard]  # Includes required extras
+# Web Framework
+fastapi==0.110.0
+uvicorn==0.29.0
 
-# AI Processing
-openai
-deepgram-sdk
-ultralytics
-transformers
-torch  # Required for many AI models
+# Database (PostgreSQL)
+sqlalchemy==2.0.27
+psycopg2-binary==2.9.9
 
-# Database & ORM
-sqlalchemy
-psycopg2-binary  # Use psycopg2-binary instead of psycopg2 for better compatibility
-firebase-admin
+# Redis Cache
+redis==5.0.1
 
-# Cloud Storage & APIs
-boto3
-supabase
-requests
-python-dotenv
+# Environment Variables Handling
+python-dotenv==1.0.1
 
-# Authentication & Security
-passlib[bcrypt]
-pyjwt
-twilio
+# AI & API Integrations
+openai==1.9.0
+deepgram-sdk==1.5.0
+google-api-python-client==2.114.0  # YouTube API
 
-# Media Processing
-moviepy
-opencv-python-headless  # Use headless version to avoid GUI issues inside Docker
-speechrecognition
-pyttsx3
-pydub  # Required for audio processing
+# Authentication (OTP, JWT)
+twilio==8.0.1
+pyjwt==2.8.0
+passlib[bcrypt]==1.7.4
 
-# WebSockets & Event Streaming
-websockets
-asyncio
+# Stripe for Payments
+stripe==9.6.0
 
-# Utility Libraries
-pydantic
-pynacl  # Required for some encryption and authentication processes
+# File Upload & Storage (Optional for Cloudflare/Supabase)
+boto3==1.34.45  # AWS S3 / Cloudflare R2
+supabase==1.0.3  # Supabase Storage SDK
 
-python-multipart
-redis
+# Logging & Monitoring
+loguru==0.7.2
 
+# Background Tasks & Workers
+celery==5.3.6
 
+# Miscellaneous Utilities
+httpx==0.27.0
+requests==2.31.0
+asyncio==3.4.3
