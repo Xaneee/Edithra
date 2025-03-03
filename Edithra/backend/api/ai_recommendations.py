@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 import redis
 import json
-from backend.database.db_setup import SessionLocal
+from database.db_setup import SessionLocal
+
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 redis_client = redis.Redis(host="localhost", port=6379, db=0)
