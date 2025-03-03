@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 import redis
 import json
-from database.db_setup import SessionLocal
+from Edithra.database.db_setup import SessionLocal
 
 
 router = APIRouter(prefix="/ai", tags=["ai"])
