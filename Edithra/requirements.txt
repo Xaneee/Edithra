@@ -27,7 +27,7 @@ stripe==9.6.0
 
 # File Upload & Storage (Optional for Cloudflare/Supabase)
 boto3==1.34.45  # AWS S3 / Cloudflare R2
-supabase==2.0.0-beta.5  # Updated to support newer httpx
+supabase==2.13.0  # Updated to support newer httpx
 
 # Logging & Monitoring
 loguru==0.7.2
