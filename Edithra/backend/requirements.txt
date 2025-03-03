@@ -14,7 +14,7 @@ python-dotenv==1.0.1
 
 # AI & API Integrations
 openai==1.9.0
-deepgram-sdk==1.5.0
+deepgram-sdk==3.10.1
 google-api-python-client==2.114.0  # YouTube API
 
 # Authentication (OTP, JWT)
