@@ -76,7 +76,7 @@ numpy==2.2.0
 pandas==2.2.3
 scikit-learn==1.6.0
 scipy==1.14.1
-torch==2.5.1+cpu
+torch==2.5.1
 
 # ==========================
 # 🎥 Image & Video Processing
