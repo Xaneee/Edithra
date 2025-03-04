@@ -82,7 +82,7 @@ torch==2.5.1
 # ==========================
 # 🎥 Image & Video Processing
 # ==========================
-opencv-python-headless==4.9.0
+opencv-python-headless==4.11.0.86
 moviepy==1.0.3
 ultralytics==8.1.0  # YOLO AI processing
 
