@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..database import SessionLocal
-from ..models.marketplace import Marketplace
+from Edithra.database.db_setup import SessionLocal
+from Edithra.models.marketplace import Marketplace
 
 router = APIRouter(prefix="/marketplace", tags=["marketplace"])
 
