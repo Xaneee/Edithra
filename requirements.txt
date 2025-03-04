@@ -41,3 +41,4 @@ requests==2.31.0
 asyncio==3.4.3
 
 opencv-python-headless
+torch
