@@ -2,7 +2,7 @@
 from fastapi import APIRouter, UploadFile, File
 import cv2
 import os
-from Backend.ai_processing import AIProcessor
+from backend.ai_processing import AIProcessor
 
 router = APIRouter()
 ai_processor = AIProcessor()
