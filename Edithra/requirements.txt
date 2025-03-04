@@ -44,3 +44,4 @@ asyncio==3.4.3
 opencv-python-headless
 torch
 
+ultralytics
