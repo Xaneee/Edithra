@@ -2,8 +2,8 @@ import stripe
 import os
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from ..database import SessionLocal
-from ..config import STRIPE_API_KEY
+from Edithra.database.db_seetup import SessionLocal
+from Edithra.config import STRIPE_API_KEY
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 
