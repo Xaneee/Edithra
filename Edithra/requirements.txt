@@ -39,3 +39,6 @@ celery==5.3.6
 httpx  # Removed version constraint to let pip auto-resolve
 requests==2.31.0
 asyncio==3.4.3
+
+
+opencv-python-headless
