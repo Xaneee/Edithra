@@ -1,0 +1,27 @@
+{
+    "build": {
+      "env": {
+        "PYTHON_VERSION": "3.12"
+      },
+      "command": "pip install --upgrade pip && pip install -r requirements.txt"
+    },
+    "deploy": {
+      "command": "uvicorn Edithra.backend.main:app --host 0.0.0.0 --port $PORT",
+      "restartPolicyType": "ON_FAILURE",
+      "healthcheckPath": "/health",
+      "healthcheckTimeoutSeconds": 30
+    },
+    "services": [
+      {
+        "name": "Edithra-backend",
+        "type": "web",
+        "rootDirectory": "Edithra",
+        "startCommand": "uvicorn Edithra.backend.main:app --host 0.0.0.0 --port $PORT",
+        "env": {
+          "PORT": "8000",
+          "PYTHONUNBUFFERED": "1"
+        }
+      }
+    ]
+  }
+  
